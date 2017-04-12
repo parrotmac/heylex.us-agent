@@ -9,6 +9,7 @@ INITIAL_UPDATER_HASH=$(shasum force-update.sh)
 INITIAL_SUPERVISOR_HASH=$(shasum heylex-agent.conf)
 
 # If we're up to date, then don't do anything
+git fetch --all
 REMOTE_REPO_REVISION=$(git rev-parse origin/master)
 LOCAL_REPO_REVISION=$(git rev-parse HEAD)
 if [ "$REMOTE_REPO_REVISION" == "$LOCAL_REPO_REVISION" ]; then
@@ -17,7 +18,6 @@ fi
 
 # There are upstream changes
 # Stomp over any local changes
-git fetch --all
 git reset --hard origin/master
 
 # If this script was updated, we'll switch to the new version
