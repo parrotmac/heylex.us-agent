@@ -12,7 +12,7 @@ UPDATED_UPDATER_HASH=$(shasum force-update.sh)
 UPDATED_SUPERVISOR_HASH=$(shasum heylex-agent.conf)
 
 if [ "$INITIAL_UPDATER_HASH" != "$UPDATED_UPDATER_HASH" ]; then
-    setsid force-update.sh &
+    setsid /opt/heylex.us-agent/force-update.sh &
     exit
 fi
 
