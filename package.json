@@ -1,0 +1,21 @@
+{
+  "name": "heylex.us-agent",
+  "version": "0.0.1",
+  "description": "Node.js Agent on Raspberry Pi controlling hardware functions",
+  "main": "gpio-client.js",
+  "scripts": {
+    "start": "node gpio-client.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@bitbucket.org/isaacparker/heylex.us-agent.git"
+  },
+  "author": "Isaac Parker <parrotmac@gmail.com>",
+  "license": "MIT",
+  "homepage": "https://bitbucket.org/isaacparker/heylex.us-agent#readme",
+  "dependencies": {
+    "socket.io-client": "^1.7.3",
+    "rpio": "^0.9.16"
+  }
+}
