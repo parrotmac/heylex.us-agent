@@ -1,6 +1,9 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
+SCRIPT_PATH=$(readlink -f "$0")
 
 cd /opt/heylex.us-agent/
+
 
 INITIAL_UPDATER_HASH=$(shasum force-update.sh)
 INITIAL_SUPERVISOR_HASH=$(shasum heylex-agent.conf)
@@ -12,8 +15,7 @@ UPDATED_UPDATER_HASH=$(shasum force-update.sh)
 UPDATED_SUPERVISOR_HASH=$(shasum heylex-agent.conf)
 
 if [ "$INITIAL_UPDATER_HASH" != "$UPDATED_UPDATER_HASH" ]; then
-    setsid /opt/heylex.us-agent/force-update.sh &
-    exit
+    exec "$SCRIPT_PATH"
 fi
 
 if [ "$INITIAL_SUPERVISOR_HASH" != "$UPDATED_SUPERVISOR_HASH" ]; then
