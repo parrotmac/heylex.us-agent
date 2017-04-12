@@ -50,7 +50,7 @@ socket.on('lex-command', function incoming(message) {
 	}
 	
     if(message === "remote-start:security:unlock") {
-        pulsePin(16);
+        pulsePin(PIN_UNLOCK);
 		confirmAction(message, commandHistory[message]);
 	}
 	
