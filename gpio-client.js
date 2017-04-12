@@ -8,7 +8,7 @@ const PIN_UNLOCK = 16;
 const PIN_LOCK = 18;
 
 rpio.open(PIN_REMOTE_START, rpio.OUTPUT); // RS Trigger
-rpio.open(16, rpio.OUTPUT); // Unlock
+rpio.open(PIN_UNLOCK, rpio.OUTPUT); // Unlock
 rpio.open(18, rpio.OUTPUT); // Lock
 
 socket.on('connect', function(){
