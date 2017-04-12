@@ -21,7 +21,7 @@ if [ "$INITIAL_SUPERVISOR_HASH" != "$UPDATED_SUPERVISOR_HASH" ]; then
     sudo supervisorctl reload heylex-agent
 fi
 
-echo "White Chocolate Mocha Latte"
+echo "Caramel Frappuccino"
 
 npm install
 sudo supervisorctl restart heylex-agent
