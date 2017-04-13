@@ -3,6 +3,8 @@
 var socket = require('socket.io-client')('http://heylex.us:8300');
 var rpio = require('rpio');
 
+var SERVICE_MODE = true;
+
 const PIN_REMOTE_START = 12;
 const PIN_UNLOCK = 16;
 const PIN_LOCK = 18;
@@ -26,6 +28,13 @@ function confirmAction(action, eventId) {
 	});
 }
 
+function denyAction(requestedAction, reason) {
+socket.emit("lex-error", {
+		"requestedAction": requestedAction,
+		"reason": reason
+	});
+}
+
 function pulsePin(pin, duration) {
 	var pulseDuration = 500;
 	if(typeof(duration) !== 'undefined') {
@@ -44,20 +53,28 @@ socket.on('lex-command', function incoming(message) {
 	commandHistory[message] ? commandHistory[message]+=1 : commandHistory[message] = 1;
 
     if(message === "remote-start:engine:on" || message === "remote-start:engine:off") {
-        // pulsePin(PIN_REMOTE_START);
-	//confirmAction(message, commandHistory[message]);
-        socket.emit("lex-error", {
-		"requestedAction": message,
-                "reason": "service-mode"
-	});
+		if(SERVICE_MODE) {
+			denyAction(message, 'service-mode-enabled')
+			return
+		}
+        pulsePin(PIN_REMOTE_START);
+		confirmAction(message, commandHistory[message]);
     }
 	
     if(message === "remote-start:security:unlock") {
+		if(SERVICE_MODE) {
+			denyAction(message, 'service-mode-enabled')
+			return
+		}
         pulsePin(PIN_UNLOCK);
 		confirmAction(message, commandHistory[message]);
 	}
 	
     if(message === "remote-start:security:lock") {
+		if(SERVICE_MODE) {
+			denyAction(message, 'service-mode-enabled')
+			return
+		}
         pulsePin(PIN_LOCK);
 		confirmAction(message, commandHistory[message]);
 	}
