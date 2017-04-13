@@ -8,8 +8,7 @@ const PIN_UNLOCK = 16;
 const PIN_LOCK = 18;
 
 rpio.open(PIN_REMOTE_START, rpio.OUTPUT); // RS Trigger
-rpio.open(PIN_UNLOCK, rpio.OUTPUT); // Unlock
-rpio.open(PIN_LOCK, rpio.OUTPUT); // Lock
+rpio.open(PIN_UNLOCK, rpio.OUTPUT); // Unlock rpio.open(PIN_LOCK, rpio.OUTPUT); // Lock
 
 socket.on('connect', function(){
 	console.log("Connected");
@@ -45,9 +44,13 @@ socket.on('lex-command', function incoming(message) {
 	commandHistory[message] ? commandHistory[message]+=1 : commandHistory[message] = 1;
 
     if(message === "remote-start:engine:on" || message === "remote-start:engine:off") {
-        pulsePin(PIN_REMOTE_START);
-		confirmAction(message, commandHistory[message]);
-	}
+        // pulsePin(PIN_REMOTE_START);
+	//confirmAction(message, commandHistory[message]);
+        socket.emit("lex-error", {
+		"requestedAction": message,
+                "reason": "service-mode"
+	});
+    }
 	
     if(message === "remote-start:security:unlock") {
         pulsePin(PIN_UNLOCK);
