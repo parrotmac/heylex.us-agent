@@ -28,8 +28,8 @@ function confirmAction(action, eventId) {
 	});
 }
 
-function denyAction(requestedAction, reason) {
-socket.emit("lex-error", {
+function returnError(requestedAction, reason) {
+	socket.emit("lex-error", {
 		"requestedAction": requestedAction,
 		"reason": reason
 	});
@@ -47,36 +47,36 @@ function pulsePin(pin, duration) {
 
 var commandHistory = {};
 
-socket.on('lex-command', function incoming(message) {
-    console.log('GPIO Command: %s', message);
+socket.on('lex-command', function incoming(actionMessage) {
+    console.log('GPIO Command: %s', actionMessage);
 
-	commandHistory[message] ? commandHistory[message]+=1 : commandHistory[message] = 1;
+	commandHistory[actionMessage] ? commandHistory[actionMessage]+=1 : commandHistory[actionMessage] = 1;
 
-    if(message === "remote-start:engine:on" || message === "remote-start:engine:off") {
+    if(actionMessage === "remote-start:engine:on" || actionMessage === "remote-start:engine:off") {
 		if(SERVICE_MODE) {
-			denyAction(message, 'service-mode-enabled')
+			returnError(actionMessage, 'service-mode-enabled')
 			return
 		}
         pulsePin(PIN_REMOTE_START);
-		confirmAction(message, commandHistory[message]);
+		confirmAction(actionMessage, commandHistory[actionMessage]);
     }
 	
-    if(message === "remote-start:security:unlock") {
+    if(actionMessage === "remote-start:security:unlock") {
 		if(SERVICE_MODE) {
-			denyAction(message, 'service-mode-enabled')
+			returnError(actionMessage, 'service-mode-enabled')
 			return
 		}
         pulsePin(PIN_UNLOCK);
-		confirmAction(message, commandHistory[message]);
+		confirmAction(actionMessage, commandHistory[actionMessage]);
 	}
 	
-    if(message === "remote-start:security:lock") {
+    if(actionMessage === "remote-start:security:lock") {
 		if(SERVICE_MODE) {
-			denyAction(message, 'service-mode-enabled')
+			returnError(actionMessage, 'service-mode-enabled')
 			return
 		}
         pulsePin(PIN_LOCK);
-		confirmAction(message, commandHistory[message]);
+		confirmAction(actionMessage, commandHistory[actionMessage]);
 	}
 	
 });
