@@ -3,7 +3,8 @@
 var socket = require('socket.io-client')('http://heylex.us:8300');
 var rpio = require('rpio');
 
-var SERVICE_MODE = true;
+// TODO: Pull this from somewhere
+var SERVICE_MODE = false;
 
 const PIN_REMOTE_START = 12;
 const PIN_UNLOCK = 16;
