@@ -10,11 +10,13 @@ const PIN_REMOTE_START = 12;
 const PIN_UNLOCK = 16;
 const PIN_LOCK = 18;
 const PIN_TRUNK = 22;
+const PIN_PARKING_LIGHTS = 40;
 
 rpio.open(PIN_REMOTE_START, rpio.OUTPUT); // RS Trigger
 rpio.open(PIN_UNLOCK, rpio.OUTPUT); // Unlock
 rpio.open(PIN_LOCK, rpio.OUTPUT); // Lock
 rpio.open(PIN_TRUNK, rpio.OUTPUT); // Trunk
+rpio.open(PIN_PARKING_LIGHTS, rpio.OUTPUT); // Parking lights
 
 socket.on('connect', function () {
 	console.log("Connected");
@@ -61,6 +63,7 @@ socket.on('lex-command', function incoming(actionMessage) {
 			returnError(actionMessage, 'service-mode-enabled')
 			return
 		}
+		pulsePin(PIN_PARKING_LIGHTS);
 		pulsePin(PIN_REMOTE_START);
 		confirmAction(actionMessage, commandHistory[actionMessage]);
 	}
@@ -71,6 +74,7 @@ socket.on('lex-command', function incoming(actionMessage) {
 			return
 		}
 		pulsePin(PIN_UNLOCK);
+		pulsePin(PIN_PARKING_LIGHTS);
 		confirmAction(actionMessage, commandHistory[actionMessage]);
 	}
 
@@ -80,6 +84,7 @@ socket.on('lex-command', function incoming(actionMessage) {
 			return
 		}
 		pulsePin(PIN_LOCK);
+		pulsePin(PIN_PARKING_LIGHTS);
 		confirmAction(actionMessage, commandHistory[actionMessage]);
 	}
 
@@ -89,6 +94,7 @@ socket.on('lex-command', function incoming(actionMessage) {
 			return
 		}
 		pulsePin(PIN_TRUNK);
+		pulsePin(PIN_PARKING_LIGHTS);
 		confirmAction(actionMessage, commandHistory[actionMessage]);
 	}
 
