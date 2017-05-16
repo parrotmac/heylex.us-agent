@@ -83,7 +83,7 @@ socket.on('lex-command', function incoming(actionMessage) {
 	}
 
 	if (actionMessage === "remote-start:fast-honk") {
-		const honkDuration = 200;
+		const honkDuration = 50;
 		const honkCount = 10;
 		for(var i = 0; i < honkCount; i++) {
 			rpio.write(PIN_HORN, rpio.HIGH);
