@@ -85,12 +85,34 @@ socket.on('lex-command', function incoming(actionMessage) {
 	if (actionMessage === "remote-start:fast-honk") {
 		const honkDuration = 50;
 		const honkCount = 5;
+
 		for(var i = 0; i < honkCount; i++) {
 			rpio.write(PIN_HORN, rpio.HIGH);
 			rpio.msleep(honkDuration);
 			rpio.write(PIN_HORN, rpio.LOW);
 			rpio.msleep(honkDuration);
 		}
+
+		var isOn = false;
+		var honks = 0;
+		var fastHonkInterval = setInterval(function() {
+			if(isOn) {
+				rpio.write(PIN_HORN, rpio.LOW);
+				isOn = false;
+				if(honks > 9) {
+					clearInterval(fastHonkInterval);
+				}
+			} else {
+				rpio.write(PIN_HORN, rpio.HIGH);
+				isOn = true;
+				honks++;
+			}
+			
+		}, 25);
+
+		// Ensure we don't accidentally leave the horn on
+		rpio.write(PIN_HORN, rpio.LOW);
+
 		confirmAction(actionMessage, commandHistory[actionMessage]);
 	}
 
