@@ -11,6 +11,7 @@ const PIN_UNLOCK = 16;
 const PIN_LOCK = 18;
 const PIN_TRUNK = 22;
 const PIN_PARKING_LIGHTS = 40;
+const PIN_HORN = 38;
 
 rpio.open(PIN_REMOTE_START, rpio.OUTPUT); // RS Trigger
 rpio.open(PIN_UNLOCK, rpio.OUTPUT); // Unlock
@@ -53,6 +54,18 @@ function pulsePin(pin, duration) {
 
 var commandHistory = {};
 
+
+socket.on('lex-meta-request', function incoming(metaRequest) {
+	switch(metaRequest) {
+		case "ping":
+		socket.emit("lext-meta-response", {
+			type: "ping",
+			time: new Date()
+		});
+		break;
+	}
+});
+
 socket.on('lex-command', function incoming(actionMessage) {
 	console.log('GPIO Command: %s', actionMessage);
 
@@ -65,6 +78,18 @@ socket.on('lex-command', function incoming(actionMessage) {
 		}
 		pulsePin(PIN_PARKING_LIGHTS);
 		pulsePin(PIN_REMOTE_START);
+		confirmAction(actionMessage, commandHistory[actionMessage]);
+	}
+
+	if (actionMessage === "remote-start:fast-honk") {
+		const honkDuration = 100;
+		const honkCount = 10;
+		for(var i = 0; i < honkCount; i++) {
+			rpio.write(PIN_HORN, rpio.HIGH);
+			rpio.msleep(honkDuration);
+			rpio.write(PIN_HORN, rpio.LOW);
+			rpio.msleep(honkDuration);
+		}
 		confirmAction(actionMessage, commandHistory[actionMessage]);
 	}
 
