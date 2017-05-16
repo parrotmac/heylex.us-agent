@@ -83,7 +83,7 @@ socket.on('lex-command', function incoming(actionMessage) {
 	}
 
 	if (actionMessage === "remote-start:fast-honk") {
-		const honkDuration = 25;
+		const honkDuration = 35;
 
 		const honkCount = 10;
 
