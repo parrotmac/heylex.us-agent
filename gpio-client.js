@@ -18,6 +18,7 @@ rpio.open(PIN_UNLOCK, rpio.OUTPUT); // Unlock
 rpio.open(PIN_LOCK, rpio.OUTPUT); // Lock
 rpio.open(PIN_TRUNK, rpio.OUTPUT); // Trunk
 rpio.open(PIN_PARKING_LIGHTS, rpio.OUTPUT); // Parking lights
+rpio.open(PIN_HORN, rpio.OUTPUT); // Horn
 
 socket.on('connect', function () {
 	console.log("Connected");
@@ -82,8 +83,8 @@ socket.on('lex-command', function incoming(actionMessage) {
 	}
 
 	if (actionMessage === "remote-start:fast-honk") {
-		const honkDuration = 250;
-		const honkCount = 5;
+		const honkDuration = 200;
+		const honkCount = 10;
 		for(var i = 0; i < honkCount; i++) {
 			rpio.write(PIN_HORN, rpio.HIGH);
 			rpio.msleep(honkDuration);
